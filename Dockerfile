@@ -1,9 +1,9 @@
-ARG IMAGE
-FROM $IMAGE
+FROM openjdk:17-jdk-slim
 
-RUN mkdir /opt/build/
-WORKDIR /opt/build/
-COPY ./build/*.txt /opt/build/
-COPY ./build/*.jar /opt/build/
+WORKDIR /app
 
-CMD ["/bin/sh", "/opt/build/init.sh"]
+COPY target/*.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
