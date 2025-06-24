@@ -27,7 +27,7 @@ jobs:
       - name: Build with Maven
         run: ./mvnw clean install -DskipTests -s $HOME/settings.xml
       - name: Run tests
-        run: ./mvnw test
+        run: ./mvnw test -s $HOME/settings.xml
 
   docker:
     needs: build
@@ -40,10 +40,12 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and push Docker image
-        run: |
-          docker build -t ghcr.io/${{ github.repository }}:latest .
-          docker push ghcr.io/${{ github.repository }}:latest
+      - name: Copiar settings.xml
+        run: cp settings.xml $HOME/.m2/settings.xml
+      - name: Compilar proyecto
+        run: ./mvnw clean package -DskipTests
+      - name: Construir imagen Docker
+        run: docker build -t sda-msa-gaps-jayli:latest .
 
   deploy:
     needs: docker
