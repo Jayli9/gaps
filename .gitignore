@@ -6,7 +6,7 @@ build/
 !**/src/test/**/build/
 
 ### maven ###
-.mvn/
+##.mvn/
 **/target
 **/bin
 **/*.class
