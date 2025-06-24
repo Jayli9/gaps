@@ -1,0 +1,233 @@
+openapi: 3.0.3
+info:
+  title: Person API
+  description: API for listing and retrieving person information
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /persons:
+    get:
+      tags:
+        - Person Controller
+      summary: List all persons
+      operationId: listPersons
+      parameters:
+        - $ref: '#/components/parameters/x-guid'
+        - $ref: '#/components/parameters/x-channel'
+        - $ref: '#/components/parameters/x-app'
+        - $ref: '#/components/parameters/x-medium'
+        - $ref: '#/components/parameters/x-session'
+        - $ref: '#/components/parameters/x-key'
+        - $ref: '#/components/parameters/x-iv'
+        - name: page
+          in: query
+          description: Número de página (empezando en 0)
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: Tamaño de página
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Lista paginada de personas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Person'
+                  totalElements:
+                    type: integer
+                  totalPages:
+                    type: integer
+                  page:
+                    type: integer
+                  size:
+                    type: integer
+    post:
+      tags:
+        - Person Controller
+      summary: Crear una persona
+      operationId: createPerson
+      parameters:
+        - $ref: '#/components/parameters/x-guid'
+        - $ref: '#/components/parameters/x-channel'
+        - $ref: '#/components/parameters/x-app'
+        - $ref: '#/components/parameters/x-medium'
+        - $ref: '#/components/parameters/x-session'
+        - $ref: '#/components/parameters/x-key'
+        - $ref: '#/components/parameters/x-iv'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Person'
+      responses:
+        '201':
+          description: Persona creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+
+  /persons/{id}:
+    get:
+      tags:
+        - Person Controller
+      summary: Obtener persona por ID
+      operationId: getPersonById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/x-guid'
+        - $ref: '#/components/parameters/x-channel'
+        - $ref: '#/components/parameters/x-app'
+        - $ref: '#/components/parameters/x-medium'
+        - $ref: '#/components/parameters/x-session'
+        - $ref: '#/components/parameters/x-key'
+        - $ref: '#/components/parameters/x-iv'
+      responses:
+        '200':
+          description: Persona encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        '404':
+          description: Persona no encontrada
+    put:
+      tags:
+        - Person Controller
+      summary: Actualizar persona por ID
+      operationId: updatePerson
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/x-guid'
+        - $ref: '#/components/parameters/x-channel'
+        - $ref: '#/components/parameters/x-app'
+        - $ref: '#/components/parameters/x-medium'
+        - $ref: '#/components/parameters/x-session'
+        - $ref: '#/components/parameters/x-key'
+        - $ref: '#/components/parameters/x-iv'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Person'
+      responses:
+        '200':
+          description: Persona actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        '404':
+          description: Persona no encontrada
+    delete:
+      tags:
+        - Person Controller
+      summary: Eliminar persona por ID
+      operationId: deletePerson
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/x-guid'
+        - $ref: '#/components/parameters/x-channel'
+        - $ref: '#/components/parameters/x-app'
+        - $ref: '#/components/parameters/x-medium'
+        - $ref: '#/components/parameters/x-session'
+        - $ref: '#/components/parameters/x-key'
+        - $ref: '#/components/parameters/x-iv'
+      responses:
+        '204':
+          description: Persona eliminada
+        '404':
+          description: Persona no encontrada
+
+components:
+  parameters:
+    x-guid:
+      name: x-guid
+      in: header
+      required: true
+      schema:
+        type: string
+    x-channel:
+      name: x-channel
+      in: header
+      required: true
+      schema:
+        type: string
+    x-app:
+      name: x-app
+      in: header
+      required: true
+      schema:
+        type: string
+    x-medium:
+      name: x-medium
+      in: header
+      required: true
+      schema:
+        type: string
+    x-session:
+      name: x-session
+      in: header
+      required: true
+      schema:
+        type: string
+    x-key:
+      name: x-key
+      in: header
+      required: true
+      schema:
+        type: string
+    x-iv:
+      name: x-iv
+      in: header
+      required: true
+      schema:
+        type: string
+  schemas:
+    Person:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '123'
+        firstName:
+          type: string
+          example: 'Juan'
+        lastName:
+          type: string
+          example: 'Pérez'
+        age:
+          type: integer
+          example: 30
+      required:
+        - firstName
+        - lastName
+        - age

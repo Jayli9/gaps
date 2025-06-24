@@ -1,0 +1,89 @@
+spring:
+  application:
+    name: sda-msa-gaps-jayli
+  header:
+    channel: digital
+    medium: web
+  web:
+    locale: es
+  kafka:
+    security:
+      protocol: "SSL"
+    properties:
+      sasl:
+        mechanism: PLAIN
+        jaas:
+          config: org.apache.kafka.common.security.plain.PlainLoginModule required username= ${MY_USER} password= ${MY_PASSWD};
+      bootstrap:
+        servers: pkc-56d1g.eastus.azure.confluent.cloud:9092
+      security:
+        protocol: SASL_SSL
+      session:
+        timeout:
+          ms: 45000
+      request:
+        timeout:
+          ms: 2000
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+
+logging:
+  level:
+    org:
+      apache:
+        kafka: OFF
+  transactional:
+    sendLog: true
+    kafka:
+      topic:
+        name: ${MY_TOPIC}
+  tracer:
+    exclusion:
+      uri: actuator,swagger,api-docs,csrf,favicon
+  obfuscation:
+    fields: ${MY_FIELDS_TO_OFUSCATE}
+    enabled: false
+    character: '*****************'
+    obfuscation-type: REQUEST
+  component:
+    name: 'name of my application'
+    handle-error:
+      status-code: 404
+  auditor:
+    kafka:
+      topic:
+        name: ${MY_TOPIC}
+    mode: 'COMPOSE'
+    obfuscation:
+      fields: ${MY_FIELDS_TO_OFUSCATE}
+      enable: false
+      character: '*****************'
+    executor:
+      isDefault: true
+      corePoolSize: 100
+      maxPoolSize: 300
+      keepAliveTime: 30
+      queueSize: 1000
+control:
+  errors:
+    trace: false
+encrypt:
+  private-key: ${PRIVATE_KEY_RSA}
+  enabled: true
+  exclusion:
+    uri: actuator,swagger,api-docs,csrf
+  cors:
+    enabled: false
+  access:
+    origin: 'localhost'
+    headers: x-key, x-vi
+    methods: POST, GET, PATCH, PUT
+
+ 
+
+
+
+
+
