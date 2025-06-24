@@ -16,6 +16,14 @@ jobs:
           distribution: 'temurin'
       - name: Dar permisos de ejecución a mvnw
         run: chmod +x ./mvnw
+      - name: Copiar settings.xml
+        run: cp settings.xml $HOME/settings.xml
+
+      - name: Reemplazar credenciales en settings.xml
+        run: |
+          sed -i "s|\${ARTIFACT_USERNAME}|${{ secrets.ARTIFACT_USERNAME }}|g" $HOME/settings.xml
+          sed -i "s|\${ARTIFACT_TOKEN}|${{ secrets.ARTIFACT_TOKEN }}|g" $HOME/settings.xml
+        shell: bash
       - name: Build with Maven
         run: ./mvnw clean package -DskipTests
       - name: Run tests
